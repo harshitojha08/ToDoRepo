@@ -8,8 +8,12 @@ namespace ToDoWebApi.Controllers
     [ApiController]
     public class TodoItemsController : ControllerBase
     {
-        private readonly List<TodoItem> _todoItems = new List<TodoItem>();
-        private long _nextId = 1;
+        private readonly List<TodoItem> _todoItems;
+        public TodoItemsController(List<TodoItem> _items) 
+        {
+          _todoItems =_items;
+        }
+
 
         [HttpGet]
         public IEnumerable<TodoItem> Get()
@@ -31,10 +35,11 @@ namespace ToDoWebApi.Controllers
         [HttpPost]
         public ActionResult<TodoItem> Create(TodoItem item)
         {
-            item.Id = _nextId++;
+            item.Id = _todoItems.Count+1;
             _todoItems.Add(item);
             return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
         }
+
 
         [HttpPut("{id}")]
         public IActionResult Update(long id, TodoItem item)
